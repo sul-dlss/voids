@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-require "blanks"
+require 'voids'
 
-class ImageForm < Blanks::Base
+class ImageForm < Voids::Base
   attribute :url, :string
   attribute :caption, :string
 
   validates :url, presence: true
 end
 
-class CoverPhotoForm < Blanks::Base
+class CoverPhotoForm < Voids::Base
   attribute :url, :string
 
   validates :url, presence: true
 end
 
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   has_one :cover_photo
   has_many :images
 
@@ -33,13 +33,13 @@ MockCoverPhoto = Struct.new(:url, keyword_init: true)
 MockPost = Struct.new(:title, :content, :created_at, :cover_photo, :images, keyword_init: true)
 
 mock_post = MockPost.new(
-  title: "model title",
-  content: "model content",
+  title: 'model title',
+  content: 'model content',
   created_at: Time.now,
-  cover_photo: MockCoverPhoto.new(url: "https://example.com/model-cover.jpg"),
+  cover_photo: MockCoverPhoto.new(url: 'https://example.com/model-cover.jpg'),
   images: [
-    MockImage.new(url: "https://example.com/model-1.jpg", caption: "model image 1"),
-    MockImage.new(url: "https://example.com/model-2.jpg", caption: "model image 2")
+    MockImage.new(url: 'https://example.com/model-1.jpg', caption: 'model image 1'),
+    MockImage.new(url: 'https://example.com/model-2.jpg', caption: 'model image 2')
   ]
 )
 

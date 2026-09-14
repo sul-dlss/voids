@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require "blanks"
+require 'voids'
 
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   attribute :id, :integer
   attribute :title, :string
 end
 
-class AdminArticleForm < Blanks::Base
+class AdminArticleForm < Voids::Base
   model_name_for :article
 
   attribute :id, :integer
@@ -20,7 +20,7 @@ puts "postform model_name.param_key: #{form1.model_name.param_key}"
 puts "postform persisted?: #{form1.persisted?}"
 puts "postform to_param: #{form1.to_param.inspect}"
 
-form2 = PostForm.new(id: 123, title: "hello")
+form2 = PostForm.new(id: 123, title: 'hello')
 puts "\npostform with id model_name: #{form2.model_name}"
 puts "postform with id persisted?: #{form2.persisted?}"
 puts "postform with id to_param: #{form2.to_param}"

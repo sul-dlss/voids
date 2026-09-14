@@ -1,8 +1,8 @@
-# Blanks
+# Voids
 
 _fill it in_.
 
-Blanks is a form object pattern that works with Rails form helpers and validations without requiring database persistence.
+Voids is a form object pattern that works with Rails form helpers and validations without requiring database persistence.
 
 Most forms don't map to a single database table; some don't map to the database at all. This gem provides form objects that implement the ActiveModel interface—associations, validations, nested attributes, dirty tracking—without requiring ActiveRecord.
 
@@ -13,7 +13,7 @@ Built on ActiveModel, so the Rails conventions you already know work here. Use t
 You've done this before:
 
 ```ruby
-gem 'blanks'
+gem 'voids'
 ```
 
 
@@ -22,7 +22,7 @@ gem 'blanks'
 ### Basic form with attributes
 
 ```ruby
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   attribute :title, :string
   attribute :content, :string
   attribute :created_at, :datetime, default: -> { Time.current }
@@ -47,7 +47,7 @@ rails g model Post title:string content:text
 ```ruby
 class Post < ApplicationRecord; end
 
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   inherit_attributes_from Post, except: [:created_at, :updated_at]
 end
 ```
@@ -55,7 +55,7 @@ end
 Use `only:` to include specific attributes:
 
 ```ruby
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   inherit_attributes_from Post, only: [:title, :content]
 end
 ```
@@ -72,7 +72,7 @@ class Post < ApplicationRecord
   validates :content, presence: true
 end
 
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   inherit_attributes_from Post, only: [:title, :content]
   inherit_validations_from Post, only: [:title]
 
@@ -111,12 +111,12 @@ end
 ### Associations
 
 ```ruby
-class ImageForm < Blanks::Base
+class ImageForm < Voids::Base
   attribute :url, :string
   validates :url, presence: true
 end
 
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   has_one :cover_photo  # defaults to CoverPhotoForm
   has_many :images      # defaults to ImageForm
 
@@ -227,12 +227,12 @@ form.images[0].url # "updated.jpg"
 Use `primary_key` option for non-id identifiers:
 
 ```ruby
-class ImageForm < Blanks::Base
+class ImageForm < Voids::Base
   attribute :uuid, :string
   attribute :url, :string
 end
 
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   has_many :images, primary_key: :uuid
 end
 
@@ -253,7 +253,7 @@ Works with `has_one` and `has_many`. Defaults to `:id`.
 Mark nested records for deletion with `allow_destroy: true`:
 
 ```ruby
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   has_many :images, allow_destroy: true
 end
 
@@ -292,7 +292,7 @@ Normalize attribute values on assignment. Works on Rails 6+, not just 7.1+.
 Normalization is idempotent—applying it multiple times produces the same result as applying it once.
 
 ```ruby
-class UserForm < Blanks::Base
+class UserForm < Voids::Base
   attribute :email, :string
   attribute :phone, :string
 
@@ -310,7 +310,7 @@ form.phone # "5551234567"
 Normalize multiple attributes with one call:
 
 ```ruby
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   attribute :title, :string
   attribute :author, :string
 
@@ -329,7 +329,7 @@ normalizes :email, with: ->(email) { email || "default@example.com" }, apply_to_
 Hook into the validation lifecycle:
 
 ```ruby
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   attribute :title, :string
 
   before_validation :normalize_title
@@ -352,7 +352,7 @@ end
 Form classes automatically strip the "Form" suffix for Rails form helpers:
 
 ```ruby
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   attribute :title, :string
 end
 
@@ -364,7 +364,7 @@ form.model_name.param_key # "post"
 Override when needed:
 
 ```ruby
-class AdminArticleForm < Blanks::Base
+class AdminArticleForm < Voids::Base
   model_name_for :article
 end
 
@@ -376,7 +376,7 @@ form.model_name.param_key # "article"
 Forms automatically detect persistence via the `id` attribute:
 
 ```ruby
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   attribute :id, :integer
   attribute :title, :string
 end
@@ -392,7 +392,7 @@ form.to_param # "123"
 Override for custom logic:
 
 ```ruby
-class PostForm < Blanks::Base
+class PostForm < Voids::Base
   def persisted?
     # custom logic
   end
