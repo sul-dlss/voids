@@ -1,3 +1,7 @@
+[![Gem version](https://badge.fury.io/rb/voids.svg)](https://badge.fury.io/rb/voids)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/sul-dlss/voids/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/sul-dlss/voids/tree/main)
+[![Codecov](https://codecov.io/github/sul-dlss/voids/graph/badge.svg?token=5PZ9TARO34)](https://codecov.io/github/sul-dlss/voids)
+
 # Voids
 
 _fill it in_.
