@@ -49,7 +49,7 @@ module Voids
         end
 
         define_method("#{name}=") do |value|
-          instance_variable_set("@#{name}", value)
+          public_send(name).replace(value)
         end
 
         accepts_nested_attributes_for(name, primary_key: primary_key, **)
