@@ -86,8 +86,8 @@ module Voids
       false
     end
 
-    def valid?
-      @records.all?(&:valid?)
+    def valid?(context = nil)
+      @records.all? { it.valid?(context) }
     end
 
     def errors
