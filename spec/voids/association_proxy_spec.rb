@@ -148,6 +148,14 @@ RSpec.describe Voids::AssociationProxy do
 
       expect(proxy.any?).to be(true)
     end
+
+    it 'supports block form' do
+      proxy = described_class.new('ItemForm')
+      proxy.new(url: 'first')
+      proxy.new(url: nil)
+
+      expect(proxy.any? { |item| item.url.nil? }).to be(true)
+    end
   end
 
   describe '#[]' do
@@ -179,6 +187,18 @@ RSpec.describe Voids::AssociationProxy do
       item2 = proxy.new(url: 'second')
 
       expect(proxy.to_a).to eq([item1, item2])
+    end
+  end
+
+  describe '#reverse' do
+    it 'returns records in reverse order' do
+      proxy = described_class.new('ItemForm')
+      first = proxy.new(url: 'first')
+      second = proxy.new(url: 'second')
+
+      expect(proxy.reverse).to eq([second, first])
+      # Keep default forward iteration behavior unchanged.
+      expect(proxy.to_a).to eq([first, second])
     end
   end
 

@@ -55,8 +55,14 @@ module Voids
       @records.empty?
     end
 
-    def any?
-      @records.any?
+    def any?(&block)
+      return @records.any? unless block
+
+      @records.any?(&block)
+    end
+
+    def reverse
+      @records.reverse
     end
 
     def [](index)
