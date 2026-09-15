@@ -85,6 +85,29 @@ RSpec.describe Voids::Base do
 
       expect(form.photo.url).to eq('https://example.com')
     end
+
+    it 'assigns keyword attributes alongside changes_applied' do
+      form_class = Class.new(described_class) do
+        attribute :title, :string
+      end
+
+      form = form_class.new
+      form.assign_attributes(title: 'new title', changes_applied: false)
+
+      expect(form.title).to eq('new title')
+    end
+
+    it 'raises when attributes are passed both positionally and as keywords' do
+      form_class = Class.new(described_class) do
+        attribute :title, :string
+        attribute :content, :string
+      end
+
+      form = form_class.new
+
+      expect { form.assign_attributes({ title: 'new title' }, content: 'new content') }
+        .to raise_error(ArgumentError, 'pass attributes either positionally or as keywords, not both')
+    end
   end
 
   describe '.from_model' do

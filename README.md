@@ -307,6 +307,24 @@ form.title_was # "original"
 form.changes # { "title" => ["original", "changed"] }
 ```
 
+`assign_attributes` resets dirty tracking when it finishes, so the form reports
+itself as clean and the assignments move to `previous_changes`. Pass
+`changes_applied: false` to keep dirty tracking intact, which is useful when the
+caller needs to know what a params hash actually changed:
+
+```ruby
+form = PostForm.new(title: "original")
+form.assign_attributes(params[:post], changes_applied: false)
+
+form.changed? # true
+form.changes  # { "title" => ["original", "submitted"] }
+```
+
+Attributes can be passed positionally or as keywords; `:changes_applied` is
+never treated as an attribute. Nested forms assigned through `*_attributes=`
+writers still reset their own dirty tracking, since those writers follow the
+Rails setter convention and take no options.
+
 ### Normalization
 
 Normalize attribute values on assignment. Works on Rails 6+, not just 7.1+.
