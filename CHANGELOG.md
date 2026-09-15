@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Add `changes_applied:` option to `Voids::Base#assign_attributes` so callers can bulk-assign attributes without resetting dirty tracking.
 - Propagate validation context to nested forms during parent validation.
 - Validate nested forms even when parent validations fail, so nested errors still bubble up.
 - Add `Voids::Base#empty?` with default emptiness semantics based on blank attributes.

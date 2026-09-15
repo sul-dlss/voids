@@ -87,7 +87,20 @@ module Voids
       assign_attributes(attributes) if attributes.present?
     end
 
-    def assign_attributes(new_attributes)
+    # Assigns the given attributes. Afterwards the form is marked as clean
+    # (dirty tracking is reset) unless `changes_applied: false` is given.
+    #
+    # Attributes may be passed positionally (`assign_attributes(params)`) or as
+    # keywords (`assign_attributes(title: 'new')`), so `:changes_applied` is
+    # extracted from the keywords rather than declared as a keyword argument.
+    def assign_attributes(new_attributes = nil, **options)
+      changes_applied = options.fetch(:changes_applied, true)
+      keyword_attributes = options.except(:changes_applied)
+      if new_attributes && keyword_attributes.any?
+        raise ArgumentError, 'pass attributes either positionally or as keywords, not both'
+      end
+
+      new_attributes ||= keyword_attributes
       return if new_attributes.blank?
 
       attrs = if new_attributes.respond_to?(:to_unsafe_h)
@@ -109,7 +122,7 @@ module Voids
         end
       end
 
-      changes_applied
+      self.changes_applied if changes_applied
     end
 
     def from_model(model)
