@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    voids (2.0.0)
+    voids (2.1.0)
       activemodel (>= 6.0)
       activesupport (>= 6.0)
       zeitwerk
