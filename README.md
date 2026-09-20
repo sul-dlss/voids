@@ -200,6 +200,15 @@ form.valid?(:publish) # false
 form.errors.full_messages # includes nested form errors
 ```
 
+Nested errors are copied onto the parent, keyed by the association and the nested
+attribute. As in `ActiveRecord`, no error is added to the association itself:
+
+```ruby
+form.errors.messages.keys # => [:"images[0].url"]  (has_many)
+form.errors.messages.keys # => [:"author.name"]    (has_one)
+form.errors[:images]      # => []
+```
+
 ### Extracting attributes for persistence
 
 Use `model_attributes` for the form's own attributes:

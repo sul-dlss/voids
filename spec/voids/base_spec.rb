@@ -386,8 +386,8 @@ RSpec.describe Voids::Base do
       form.images.new
 
       expect(form.valid?).to be(false)
-      expect(form.errors.details[:images]).to include(error: :invalid)
-      expect(form.errors.messages.keys).to include(:'images[0].url')
+      expect(form.errors.messages.keys).to contain_exactly(:'images[0].url')
+      expect(form.errors[:images]).to be_empty
     end
 
     it 'includes nested form errors in parent errors' do
@@ -407,8 +407,8 @@ RSpec.describe Voids::Base do
       form.build_photo
       form.valid?
 
-      expect(form.errors.messages.keys).to include(:photo, :'photo.url')
-      expect(form.errors.details[:photo]).to include(error: :invalid)
+      expect(form.errors.messages.keys).to contain_exactly(:'photo.url')
+      expect(form.errors[:photo]).to be_empty
     end
 
     it 'includes nested form errors in parent even when parent has errors' do
@@ -429,8 +429,8 @@ RSpec.describe Voids::Base do
       form.build_photo
       form.valid?
 
-      expect(form.errors.messages.keys).to contain_exactly(:title, :photo, :'photo.url')
-      expect(form.errors.details[:photo]).to include(error: :invalid)
+      expect(form.errors.messages.keys).to contain_exactly(:title, :'photo.url')
+      expect(form.errors[:photo]).to be_empty
     end
 
     it 'passes the validation context to nested forms' do
@@ -452,8 +452,34 @@ RSpec.describe Voids::Base do
       form.build_photo(url: 'http://myspace.com/sicily-photos')
       form.valid?(:final_setup)
 
-      expect(form.errors.messages.keys).to contain_exactly(:photo, :'photo.url')
-      expect(form.errors.details[:photo]).to include(error: :invalid)
+      expect(form.errors.messages.keys).to contain_exactly(:'photo.url')
+      expect(form.errors[:photo]).to be_empty
+    end
+
+    it 'validates each nested form exactly once' do
+      validation_counts = Hash.new(0)
+      nested_class = Class.new(described_class) do
+        attribute :url, :string
+        validate do
+          validation_counts[url] += 1
+          errors.add(:url, :blank) if url.blank?
+        end
+      end
+      stub_const('ImageForm', nested_class)
+
+      form_class = Class.new(described_class) do
+        has_many :images
+        attribute :title, :string
+      end
+      stub_const('ImageGalleryForm', form_class)
+
+      form = form_class.new(title: 'test')
+      %w[first second].each { |url| form.images.new(url:) }
+      form.images.new(url: '')
+      form.images.new(url: 'fourth')
+      form.valid?
+
+      expect(validation_counts).to eq({ 'first' => 1, 'second' => 1, '' => 1, 'fourth' => 1 })
     end
   end
 end

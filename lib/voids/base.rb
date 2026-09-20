@@ -247,17 +247,15 @@ module Voids
         when :has_one
           next if nested_form.valid?(context)
 
-          errors.add(name.to_sym, :invalid)
           copy_nested_errors(name, nested_form)
           all_valid = false
         when :has_many
-          next if nested_form.valid?(context)
-
-          errors.add(name.to_sym, :invalid)
           nested_form.each_with_index do |form, index|
-            copy_nested_errors("#{name}[#{index}]", form) unless form.valid?(context)
+            next if form.valid?(context)
+
+            copy_nested_errors("#{name}[#{index}]", form)
+            all_valid = false
           end
-          all_valid = false
         end
       end
 
