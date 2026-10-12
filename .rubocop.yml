@@ -4,10 +4,15 @@ plugins:
   - rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 3.4
+  TargetRubyVersion: 4.0
   SuggestExtensions: false
   Exclude:
     - examples/**/*
+
+# Development uses Ruby 4, but the gem still supports Ruby 3.4 consumers.
+Gemspec/RequiredRubyVersion:
+  Exclude:
+    - voids.gemspec
 
 RSpec/ExampleLength:
   Enabled: false
